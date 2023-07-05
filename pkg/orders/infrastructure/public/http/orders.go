@@ -42,7 +42,7 @@ func AddRoutes(router *chi.Mux, service *application.OrdersService, repo *orders
 		repo:    repo,
 	}
 	router.Post("/order", resource.Post)
-	router.Get("/orders/{id}/paid", resource.Paid)
+	router.Get("/orders/{id}/paid", resource.GetPaid)
 }
 
 func (o *ordersResourcre) Post(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +76,7 @@ func (o *ordersResourcre) Post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (o *ordersResourcre) GetPaid(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r,"id")
+	id := orders.ID(chi.URLParam(r,"id"))
 	order,err := (*(o.repo)).ByID(id)
 	if err != nil{
 		render.Render(w,r,common_http.ErrInternal(err))
